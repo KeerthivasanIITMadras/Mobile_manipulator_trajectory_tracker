@@ -1,0 +1,3 @@
+[submodule "youbot_description"]
+	path = youbot_description
+	url = git@github.com:a2s-institute/youbot_description.git
