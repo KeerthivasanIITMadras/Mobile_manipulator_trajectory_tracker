@@ -4,14 +4,12 @@
   <version>0.1.0</version>
   <description>Robot descriptions in form of URDF files and meshes</description>
 
-  <maintainer email="nowak@locomotec.com">Walter Nowak</maintainer>
-  <maintainer email="blumenthal@locomotec.com">Sebastian Blumenthal</maintainer>
+  <maintainer email="ed21b026@smail.iitm.ac.in">Gokul M K</maintainer>
+  <maintainer email="ed21b034@smail.iitm.ac.in">Keerthivasan M</maintainer>
 
   <license>GPLv3</license>
 
-  <!--url type="website">http://github.com/youbot/youbot_description</url-->
-
-  <author email="frederik.hegger@h-brs.de">Frederik Heger</author> -->
+  <author email="ed21b026@smail.iitm.ac.in">Gokul M K</author> -->
 
   <buildtool_depend>catkin</buildtool_depend>
 
