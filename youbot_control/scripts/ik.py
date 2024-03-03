@@ -42,7 +42,7 @@ class IK:
 
 class Gazebo_interface:
     def __init__(self,robot) -> None:
-        self.f = 0.1
+        self.f = 0.5
         self.robot = robot
         self.tolerance = 0.15
         self.ik = IK(self.robot)
@@ -52,7 +52,6 @@ class Gazebo_interface:
         self.positions = None
 
     def go_to_goal(self,goal,current_state,joint_state):
-        self.f = 0.5
         delta_x = goal-current_state
         control_input = self.f*delta_x
         final_state = None
@@ -66,7 +65,7 @@ class Gazebo_interface:
         point.velocities = [0.0, 0.0, 0.0, 0.0, 0.0]  
         point.accelerations = [0.0, 0.0, 0.0, 0.0, 0.0]
         time_increment = rospy.Duration(1)
-        while np.linalg.norm(delta_x)>self.tolerance:
+        while np.linalg.norm(delta_x[:3])>self.tolerance:
             joint_state = self.ik.jacobian_with_optimization(joint_state,control_input)
             point.positions = joint_state  
             point.time_from_start = time_increment
@@ -81,9 +80,9 @@ class Gazebo_interface:
             control_input = self.f*delta_x
             final_state = joint_state
             time_increment += rospy.Duration(1)
-            print(np.linalg.norm(delta_x))
+            print(np.linalg.norm(delta_x[:3]))
             goal_msg.goal.trajectory.points = []
-            time.sleep(0.25)
+            time.sleep(1)
 
         print("converged")
         return final_state
@@ -99,7 +98,7 @@ if __name__=="__main__":
                  RevoluteDH(d = 0.2175,offset=0,alpha=0,a=0)])
     
     joint_state = np.zeros(5) # this is the joint_state
-    goal_state = [0.3,0,0.1,0,0,0] # this is in the cartesian state
+    goal_state = [0.1,0.1,0.1,0,0,0] # this is in the cartesian state
     current_state = robot.fkine(joint_state)
     current_orientation = R.from_matrix(current_state.R).as_euler('xyz')
     cartesian_state= np.zeros(6)
