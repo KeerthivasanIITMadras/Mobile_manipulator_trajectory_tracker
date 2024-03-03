@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>youbot_ros_controllers</name>
+  <name>youbot_control</name>
   <version>0.0.0</version>
-  <description>The youbot_ros_controllers package</description>
+  <description>The youbot_control package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
