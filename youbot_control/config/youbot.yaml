@@ -9,6 +9,9 @@ hardware_interface:
     - arm_joint_3
     - arm_joint_4
     - arm_joint_5
+    - gripper_finger_joint_l
+    - gripper_finger_joint_r
+
 # Creates the /joint_states topic necessary in ROS
 joint_state_controller:
   type: joint_state_controller/JointStateController
@@ -21,32 +24,54 @@ arm_controller:
     - arm_joint_3
     - arm_joint_4
     - arm_joint_5
+
   gains:
     arm_joint_1:
-      p: 10000
+      p: 1000
       d: 1
       i: 1
       i_clamp: 1
     arm_joint_2:
-      p: 10000
-      d: 10
+      p: 1000
+      d: 1
       i: 1
       i_clamp: 1
     arm_joint_3:
-      p: 10000
-      d: 10
+      p: 1000
+      d: 1
       i: 1
       i_clamp: 1
     arm_joint_4:
-      p: 10000
-      d: 10
+      p: 1000
+      d: 1
       i: 1
       i_clamp: 1
     arm_joint_5:
-      p: 10000
-      d: 10
+      p: 1000
+      d: 1
       i: 1
       i_clamp: 1
+
+
+gripper_controller:
+  type: effort_controllers/JointTrajectoryController
+
+  joints:
+    - gripper_finger_joint_l
+    - gripper_finger_joint_r
+  gains:
+    gripper_finger_joint_l:
+      p: 1000
+      d: 1
+      i: 1
+      i_clamp: 1
+
+    gripper_finger_joint_r:
+      p: 1000
+      d: 1
+      i: 1
+      i_clamp: 1
+
 controller_list:
   - name: arm_controller
     action_ns: follow_joint_trajectory
@@ -58,3 +83,12 @@ controller_list:
       - arm_joint_3
       - arm_joint_4
       - arm_joint_5
+
+
+  - name: gripper_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: True
+    joints:
+      - gripper_finger_joint_l
+      - gripper_finger_joint_r
