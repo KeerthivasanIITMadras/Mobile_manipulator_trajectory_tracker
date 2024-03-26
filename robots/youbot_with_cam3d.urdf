@@ -6,20 +6,15 @@
 <robot name="youbot" xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller" xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor">
   &gt;
 
-	
-  <!--<xacro:property name="link_0_mass" value="0.845" />
-	<xacro:property name="link_1_mass" value="0.1" />
-	<xacro:property name="link_2_mass" value="0.1" />
-	<xacro:property name="link_3_mass" value="0.1" />
-	<xacro:property name="link_4_mass" value="0.1" />
-	<xacro:property name="link_5_mass" value="0.1" />-->
-  <!-- TODO: add inertia tensor-->
   <gazebo>
-    <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_controller">
+    <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+      <robotNamespace>/youbot</robotNamespace>
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
       <legacyModeNS>true</legacyModeNS>
+      <controlPeriod>0.001</controlPeriod>
     </plugin>
   </gazebo>
+  
   <material name="youBot/Orange">
     <color rgba="1.0 0.4 0.0 1.0"/>
   </material>
@@ -55,6 +50,12 @@
        (e.g., base_link).  The xacro:included origin block is also an argument to the macro.  By convention, 
        the origin block defines where the component is w.r.t its parent (in this case the parent 
        is the world frame). For more, see http://www.ros.org/wiki/xacro -->
+  <link name="odom"/>
+  <joint name="odom_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <child link="base_footprint"/>
+    <parent link="odom"/>
+  </joint>
   <link name="base_footprint"/>
   <joint name="base_footprint_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -491,7 +492,7 @@
     <axis xyz="0 1 0"/>
     <!--<calibration rising="${arm_2_ref}" falling="${arm_2_ref}"/>-->
     <dynamics damping="1" friction="0.5"/>
-    <limit effort="9.5" lower="0" upper="2.705260340591211" velocity="1.5707963267948966"/>
+    <limit effort="9.5" lower="-0.75" upper="2.705260340591211" velocity="1.5707963267948966"/>
     <!--safety_controller k_position="20" k_velocity="${2*9.5/M_PI}" soft_lower_limit="${threshold}" soft_upper_limit="${joint_2_limit_soft}" /-->
   </joint>
   <link name="arm_link_2">
@@ -531,7 +532,7 @@
     <child link="arm_link_3"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="1" friction="0.5"/>
-    <limit effort="9.5" lower="-1.0" upper="0.0" velocity="1.5707963267948966"/>
+    <limit effort="9.5" lower="-1.5" upper="0.0" velocity="1.5707963267948966"/>
     <!--safety_controller k_position="20" k_velocity="50" soft_lower_limit="-${joint_3_limit_soft}" soft_upper_limit="-${threshold}" /-->
   </joint>
   <link name="arm_link_3">
@@ -639,51 +640,62 @@
   <gazebo reference="arm_link_5">
     <turnGravityOff>false</turnGravityOff>
   </gazebo>
+  
   <transmission name="arm_trans_1">
     <type>transmission_interface/SimpleTransmission</type>
     <actuator name="arm_motor_1">
       <mechanicalReduction>1</mechanicalReduction>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </actuator>
     <joint name="arm_joint_1">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
   </transmission>
+  
   <transmission name="arm_trans_2">
     <type>transmission_interface/SimpleTransmission</type>
     <actuator name="arm_motor_2">
       <mechanicalReduction>1</mechanicalReduction>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </actuator>
     <joint name="arm_joint_2">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
   </transmission>
+  
   <transmission name="arm_trans_3">
     <type>transmission_interface/SimpleTransmission</type>
     <actuator name="arm_motor_3">
       <mechanicalReduction>1</mechanicalReduction>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </actuator>
     <joint name="arm_joint_3">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
   </transmission>
+  
   <transmission name="arm_trans_4">
     <type>transmission_interface/SimpleTransmission</type>
     <actuator name="arm_motor_4">
       <mechanicalReduction>1</mechanicalReduction>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </actuator>
     <joint name="arm_joint_4">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
   </transmission>
+  
   <transmission name="arm_trans_5">
     <type>transmission_interface/SimpleTransmission</type>
     <actuator name="arm_motor_5">
       <mechanicalReduction>1</mechanicalReduction>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </actuator>
     <joint name="arm_joint_5">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
   </transmission>
+  
   <!-- joint between arm_7_link and sdh_palm_link -->
   <joint name="gripper_palm_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -786,24 +798,29 @@
     <turnGravityOff>false</turnGravityOff>
     <selfCollide>true</selfCollide>
   </gazebo>
+  
   <transmission name="gripper_finger_l_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <actuator name="gripper_finger_l_motor">
       <mechanicalReduction>1</mechanicalReduction>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </actuator>
     <joint name="gripper_finger_joint_l">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
   </transmission>
+  
   <transmission name="gripper_finger_r_trans">
     <type>transmission_interface/SimpleTransmission</type>
     <actuator name="gripper_finger_r_motor">
       <mechanicalReduction>1</mechanicalReduction>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </actuator>
     <joint name="gripper_finger_joint_r">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
   </transmission>
+  
   <joint name="base_laser_front_hokuyo_urg04_laser_joint" type="fixed">
     <axis xyz="0 1 0"/>
     <origin rpy="0 0 0" xyz="0.3 0 -0.03"/>
@@ -1112,5 +1129,16 @@
       </plugin>
     </sensor>
   </gazebo>
+  
+  <gazebo>
+  	<plugin name="base_controller" filename="libgazebo_ros_planar_move.so">
+  		<commandTopic>cmd_vel</commandTopic>
+  		<odometryTopic>odom</odometryTopic>
+  		<odometryFrame>odom</odometryFrame>
+  		<odometryRate>20.0</odometryRate>
+  		<robotBaseFrame>base_footprint</robotBaseFrame>
+  	</plugin>
+  </gazebo>
+  
 </robot>
 

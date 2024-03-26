@@ -7,9 +7,10 @@
     caster_joint_fr_controller wheel_joint_bl_controller caster_joint_bl_controller wheel_joint_br_controller caster_joint_br_controller arm_joint_1_controller arm_joint_2_controller
     arm_joint_3_controller arm_joint_4_controller arm_joint_5_controller gripper_finger_joint_l_controller gripper_finger_joint_r_controller joint_state_controller " name="controller_spawner" ns="galileo" output="screen" pkg="controller_manager" respawn="false" type="spawner"/>
     
-    <node name="robot_state_publisher" output="screen" pkg="robot_state_publisher" respawn="false" type="robot_state_publisher">
-      <remap from="/joint_states" to="/youbot/joint_states"/>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+     	<remap from="/joint_states" to="/youbot/joint_states" />
     </node>
+
     
     
 </launch>

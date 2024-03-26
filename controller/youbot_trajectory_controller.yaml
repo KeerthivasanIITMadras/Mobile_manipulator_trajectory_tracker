@@ -1,0 +1,27 @@
+youbot_controller:
+  youbot_arm_joint_controller:
+    type: "position_controllers/JointTrajectoryController"
+    joints:
+      - arm_joint_1
+      - arm_joint_2
+      - arm_joint_3
+      - arm_joint_4
+      - arm_joint_5
+
+    gains:
+      arm_joint_1: {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}
+      arm_joint_2: {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}
+      arm_joint_3: {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}
+      arm_joint_4: {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}
+      arm_joint_5: {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}
+
+
+  youbot_gripper_controller:
+    type: "position_controllers/JointTrajectoryController"
+    joints:
+      - gripper_finger_joint_l
+      - gripper_finger_joint_r
+    gains:
+      gripper_finger_joint_l:  {p: 50.0, d: 1.0, i: 0.01, i_clamp: 1.0}
+      gripper_finger_joint_r:  {p: 50.0, d: 1.0, i: 0.01, i_clamp: 1.0}
+
