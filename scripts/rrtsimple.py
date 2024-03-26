@@ -7,7 +7,7 @@ import numpy as np
 from std_msgs.msg import Float64
 from sensor_msgs.msg import JointState
 from scipy.interpolate import CubicSpline
-
+from navigation_control import Navigation
 initial_config = [0]*5
 
 class SimpleRRT:
@@ -113,16 +113,27 @@ def publishAngles(path):
 def continousTrajectory(initial_config, goal_config):
 
     bounds = [(-1, 1) for _ in range(5)]
+    for i in range(2):
+        bounds.append((0,7))
     max_iter = 1000
-    step_size = 0.1
+    step_size = 0.01
     path = []
 
     rrt = SimpleRRT(initial_config, goal_config)
     goal_bias = 0.2
     path = rrt.grow_tree(max_iter, step_size, bounds, goal_bias)
+    
+    path[0] = [0,0,0,0,0,0,0]
     print(f"Path: {path}")
+    print(np.asarray(path).shape)
+    joint_angles_trajectory = [row[:5] for row in path]
+    cartesian_trajectory = [row[5:7] for row in path]
     print(" ")
-    publishAngles(path)
+    print(cartesian_trajectory)
+    # publishAngles(joint_angles_trajectory)
+    nav = Navigation(cartesian_trajectory)
+    # nav.publish_base_path()
+    nav.velocity_command_base()
 
 
 def joint_callback(msg):
@@ -137,8 +148,9 @@ if __name__ == "__main__":
     joint_state = rospy.Subscriber("/youbot/joint_states", JointState, joint_callback)
 
     goal_config = [[1.6, -0.75, -1.5, 1, 1.8], [1.4, 2.13, -1.5, 1.4, 2]]
+    goal_config = [[1.4, 2.13, -1.5, 1.4, 2,3,3]]
 
-    while initial_config == [0, 0, 0, 0, 0]:
+    while initial_config == [0, 0, 0, 0, 0,0,0]:
         rospy.sleep(0.1) 
 
     for i in range(len(goal_config)):
